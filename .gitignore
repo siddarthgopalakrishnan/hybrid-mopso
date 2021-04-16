@@ -1,0 +1,17 @@
+# Ignore pycache
+__pycache__/
+
+# Image directory
+imgs/
+
+# GIFs
+*.gif
+
+# Text files
+*.txt
+
+# Environment
+mopso/
+
+# vscode
+.vscode/
