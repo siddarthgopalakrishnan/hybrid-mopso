@@ -9,11 +9,11 @@ def init_pos(particles, in_min, in_max):
     :param particles: Number of particles
     :param in_min: Lower bounds for the particles
     :param in_max: Upper bounds for the particles
+    :variable in_dim: Dimension of input parameters
     Returns randomly generated population
     """
-    in_dim = len(in_max)  # Dimension of input parameters
+    in_dim = len(in_max)
     print('\nDecision space dimension:', in_dim)
-    print('Initializing random positions')
     in_temp = np.random.uniform(
         0, 1, (particles, in_dim))*(in_max - in_min) + in_min
     return in_temp
@@ -25,10 +25,10 @@ def init_v(particles, v_max, v_min):
     :param particles: Number of particles
     :param v_max: Upper bounds of particle velocity
     :param v_min: Lower bounds of particle velocity
+    :variable v_dim: Dimension of input parameters
     Returns zero velocities
     """
-    v_dim = len(v_max)  # Dimension of input parameters
-    print('Initializing zero velocity')
+    v_dim = len(v_max)
     v_ = np.zeros((particles, v_dim))
     return v_
 
