@@ -6,7 +6,6 @@ import os
 frames = []
 imgs = glob.glob("./imgs/*.png")
 imgs = sorted(imgs, key=lambda x: int(os.path.basename(x).split(".")[0]))
-# print(imgs)
 for i in imgs:
     new_frame = Image.open(i)
     frames.append(new_frame)
