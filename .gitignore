@@ -4,6 +4,12 @@ __pycache__/
 # Image directory
 imgs/
 
+# Coordinates directory
+coords/
+
+# Images
+*.png
+
 # GIFs
 *.gif
 
