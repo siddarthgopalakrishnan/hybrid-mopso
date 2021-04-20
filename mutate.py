@@ -29,5 +29,6 @@ def mutate_(i, cycle_, mu, in_, min_, max_):
             if ub > max_[j]:
                 ub = max_[j]
             in_[it, j] = np.random.uniform(lb, ub)
+    # Dampening factor
     # mu = 0.95*mu
     return in_, mu
