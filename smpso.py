@@ -1,12 +1,13 @@
 import numpy as np
+import os
+import matplotlib.pyplot as plt
 from jmetal.util.solution import get_non_dominated_solutions
-from jmetal.lab.visualization.plotting import Plot
 from jmetal.algorithm.multiobjective.smpso import SMPSO
 from jmetal.operator import PolynomialMutation
 from jmetal.util.archive import CrowdingDistanceArchive
 from jmetal.util.termination_criterion import StoppingByEvaluations
-from jmetal.problem import ZDT1, Tanaka
-from jmetal.problem.multiobjective.constrained import Osyczka2, Binh2
+from jmetal.problem.multiobjective.zdt import ZDT2
+from jmetal.problem.multiobjective.constrained import Osyczka2, Binh2, Tanaka
 
 
 def solve_problem(problem):
@@ -27,9 +28,6 @@ def solve_problem(problem):
     algorithm.run()
     solutions = algorithm.get_result()
     front = get_non_dominated_solutions(solutions)
-    # plot_front = Plot(title='Pareto front approximation',
-    #                   axis_labels=['x', 'y'])
-    # plot_front.plot(front, label='SMPSO')
 
     print("Running time of SMPSO :", algorithm.total_computing_time, "s")
     getres = np.array(solutions)
@@ -45,17 +43,19 @@ def solve_problem(problem):
     np.savetxt("./coords/smpso_in.txt", archive_pts)
     np.savetxt("./coords/smpso_fit.txt", archive_fitness)
 
-    # f = open("./smpso_in.txt", 'w')
-    # for i in range(getres.shape[0]):
-    #     mystr = (str(np.array(getattr(solutions[i], 'variables')))).strip(
-    #         "[]")+"\n"
-    #     f.write(mystr)
-    # f.close()
+    plt.title('SMPSO_Front')
+    plt.xlabel('fitness_y1')
+    plt.ylabel('fitness_y2')
+    plt.scatter(archive_fitness[:, 0], archive_fitness[:, 1],
+                s=30, c='red', marker=".", alpha=1.0)
+
+    plt.savefig('./imgs/SMPSO_Front.png')
+    plt.close()
 
 
 def driver(funct):
     if funct == 1:
-        problem = ZDT1()
+        problem = ZDT2()
     elif funct == 2:
         problem = Tanaka()
     elif funct == 3:
