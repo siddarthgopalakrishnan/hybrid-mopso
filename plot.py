@@ -16,7 +16,7 @@ class Plot_pareto:
             os.makedirs('./imgs')
             print('\nCreating folder imgs : Save image of each iteration')
 
-    def show(self, in_, fitness_, archive_in, archive_fitness, i):
+    def show(self, fitness_, archive_fitness, i):
         # 3D plot for 3 objectives
         # if fitness_.shape[1] == 3:
         #     fig = plt.figure()
@@ -32,7 +32,7 @@ class Plot_pareto:
 
         # 2D plot for 2 objectives
         if fitness_.shape[1] == 2:
-            plt.title('Iteration'+str(i+1))
+            plt.title('MOPSO+_Iteration_'+str(i+1))
             plt.xlabel('fitness_y1')
             plt.ylabel('fitness_y2')
             plt.scatter(
