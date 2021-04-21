@@ -39,8 +39,7 @@ def get_objective(flag, funct, num_obj, Input):
             FunctionValue[:, 0] = Population[:, 0]
             c = np.sum(FunctionValue[:, 1:], axis=1)
             g = 1.0 + 9.0 * c / 5
-            FunctionValue[:, 1] = g * \
-                (1 - np.power((FunctionValue[:, 0] * 1.0 / g), 2))
+            FunctionValue[:, 1] = g * (1 - ((FunctionValue[:, 0] / g)**2))
         elif funct == 2:
             # Tanaka
             FunctionValue[:, 0] = Population[:, 0]
