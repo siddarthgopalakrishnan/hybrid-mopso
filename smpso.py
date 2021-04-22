@@ -13,9 +13,10 @@ from jmetal.problem.multiobjective.constrained import Osyczka2, Binh2, Tanaka
 def solve_problem(problem):
 
     mutation_probability = 1.0 / problem.number_of_variables
-    max_evaluations = 15000
+    max_evaluations = 8000 if problem == ZDT2() else 15000
     swarm_size = 100
 
+    # API call
     algorithm = SMPSO(
         problem=problem,
         swarm_size=swarm_size,
