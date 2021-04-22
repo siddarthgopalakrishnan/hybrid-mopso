@@ -9,6 +9,7 @@ def hybridize_(archive_in, min_, max_):
     """
     Augment our archive to explore locally and improve search capabilities.
     For each dimension we perform x_i = x_i +/- delta_x_i
+    For large input dimensions, we can choose dimensions to hybridize on probability
     :param archive_in: Current archive set
     :param min_: Lower bounds for the particles
     :param max_: Upper bounds for the particles
@@ -16,7 +17,10 @@ def hybridize_(archive_in, min_, max_):
     """
     temparch = archive_in
     combined_pop = archive_in
+    rand_hyb = (archive_in.shape[1] >= 6)
     for i in range(archive_in.shape[1]):
+        if rand_hyb and np.random.rand() > 0.5:
+            continue
         temparch[:, i] = temparch[:, i] - delta
         temparch[(temparch[:, i] < min_[i]), i] = min_[i]
         combined_pop = np.vstack((combined_pop, temparch))
