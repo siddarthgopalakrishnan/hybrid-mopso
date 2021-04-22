@@ -67,9 +67,8 @@ def update_archive(it, in_, fitness_, archive_in, archive_fitness, thresh, mesh_
     """
     combined_pop = np.vstack((archive_in, in_))
     total_Func = np.vstack((archive_fitness, fitness_))
-
     # Hybridization
-    if it > 0 and it % 1000 == 0:
+    if it > 0 and it % 300 == 0:
         # Augment population
         archive_in = augment.hybridize_(archive_in, min_, max_)
         # Get new fitness values
@@ -102,62 +101,44 @@ def RouletteWheelSelection(N, Fitness):
     Return array of those grid numbers for each random point
     index is the above array
     """
-    # print(Fitness)
     Fitness = np.reshape(Fitness, (-1,))  # reshape rows unkown
-    # print(Fitness)
     # remove negative values
     Fitness = Fitness + np.minimum(np.min(Fitness), 0)
-    # print(Fitness)
     Fitness = np.cumsum(1/Fitness)
-    # print(Fitness)
     Fitness = Fitness/np.max(Fitness)
-    # print(Fitness)
     index = np.sum(np.int64(~(np.random.rand(N, 1) < Fitness)), axis=1)
     return index
 
 
 def update_gbest(archiving_in, archiving_fit, mesh_div, min_, max_, particles):
-    Nop, num_obj = archiving_fit.shape
+    """
+    Update global best of the particles based on hypercube method
+    """
+    apop_size, _ = archiving_fit.shape
     # Calculate the grid location of each solution
     fmax = np.max(archiving_fit, axis=0)
     fmin = np.min(archiving_fit, axis=0)
     d = (fmax-fmin)/mesh_div
-    fmin = np.tile(fmin, (Nop, 1))
-    # print(fmin)
-    d = np.tile(d, (Nop, 1))
-    # print(d)
-    Gloc = np.floor((archiving_fit - fmin) / d)
-    # print(Gloc)
-    Gloc[Gloc >= mesh_div] = mesh_div-1
-    # print(Gloc)
-    Gloc[np.isnan(Gloc)] = 0
-    # print(Gloc)
+    fmin = np.tile(fmin, (apop_size, 1))
+    d = np.tile(d, (apop_size, 1))
+    grid_norm = np.floor((archiving_fit - fmin) / d)
+    grid_norm[grid_norm >= mesh_div] = mesh_div-1
+    grid_norm[np.isnan(grid_norm)] = 0
     # Detect the grid of each solution belongs to
-    p, q, Site = np.unique(Gloc, return_index=True,
-                           return_inverse=True, axis=0)
-    # print(p)
-    # print(q)
+    _, _, grid_site = np.unique(grid_norm, return_index=True,
+                                return_inverse=True, axis=0)
     # which grid number will the objective space point (pair <f1,f2>) lie in
-    # print('Site:', Site)
     # Calculate the crowd degree of each grid
-    CrowdG = np.histogram(Site, np.max(Site)+1)[0]
-    # print('crowdG:', CrowdG)  # number of elements in each grid
+    crowding = np.histogram(grid_site, np.max(grid_site)+1)[0]
     # Roulette-wheel 1/Fitnessselection
-    TheGrid = RouletteWheelSelection(particles, CrowdG)
-    # print(TheGrid)
+    TheGrid = RouletteWheelSelection(particles, crowding)
     # Grid numbers of N random points on the grid
 
     ReP = np.zeros(particles,)
     for i in range(particles):
-        # where the randomly generated element from TheGrid, lies in our Site
-        InGrid = np.where(Site == TheGrid[i])[0]
-        # print(InGrid)
-        # print('Leningrid:', len(InGrid))
+        # where the randomly generated element from TheGrid, lies in our grid_site
+        InGrid = np.where(grid_site == TheGrid[i])[0]
         Temp = np.random.randint(0, len(InGrid))
         ReP[i] = InGrid[Temp]
-        # print(ReP[i])
-    # print(ReP)
     ReP = np.int64(ReP)
-    # print(ReP)
-    # print(archiving_in[ReP])
     return archiving_in[ReP], archiving_fit[ReP]
