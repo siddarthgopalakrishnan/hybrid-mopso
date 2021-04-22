@@ -8,8 +8,10 @@ from pymoo.optimize import minimize
 
 def solve_problem(problem):
     algorithm = NSGA2(pop_size=100)
+    gens = 150 if problem == "zdt2" else 200
 
-    res = minimize(problem, algorithm, ('n_gen', 200), seed=1, verbose=False)
+    # API call
+    res = minimize(problem, algorithm, ('n_gen', gens), seed=1, verbose=False)
     print("Running time of NSGA2 :", res.exec_time, "s")
     np.savetxt("./coords/nsga2_in.txt", res.X)
     np.savetxt("./coords/nsga2_fit.txt", res.F)
@@ -25,7 +27,7 @@ def solve_problem(problem):
 
 def driver(funct):
     if funct == 1:
-        problem = get_problem("zdt1")
+        problem = get_problem("zdt2")
     elif funct == 2:
         problem = get_problem("tnk")
     elif funct == 3:
