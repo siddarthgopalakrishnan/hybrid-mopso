@@ -10,9 +10,6 @@ coords/
 # Shell scripts
 *.sh
 
-# Images
-*.png
-
 # GIFs
 *.gif
 
